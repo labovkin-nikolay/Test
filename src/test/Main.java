@@ -57,7 +57,7 @@ public class Main extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Programm");
+        setTitle("Список закупок");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(100, 100));
         setResizable(false);
@@ -213,7 +213,7 @@ public class Main extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(13, 43, 0, 0);
         getContentPane().add(jButton4, gridBagConstraints);
 
-        jButton5.setText("Список закупленных товаров");
+        jButton5.setText("Список товаров");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
