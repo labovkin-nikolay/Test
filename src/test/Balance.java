@@ -88,7 +88,7 @@ public class Balance extends javax.swing.JFrame {
             return dbConnection;
         } else {
             try {
-                dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/test", "root", "08071994");
+                dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", "root", "08071994");
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }

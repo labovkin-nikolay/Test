@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -242,13 +243,15 @@ public class Main extends javax.swing.JFrame {
             return dbConnection;
         } else {
             try {
-                dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/test", "root", "08071994");
+                dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", "root", "08071994");
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+                JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных!", "Ошибка!",JOptionPane.INFORMATION_MESSAGE);
+                System.exit(1);
             }
             return dbConnection;
         }
-}
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:ff
         //dbConnection = getConnection();
@@ -287,12 +290,12 @@ public class Main extends javax.swing.JFrame {
             TableModel model = jTable1.getModel();
             name = model.getValueAt(selIndex, 0);
             provider = model.getValueAt(selIndex, 1);
-            number =  model.getValueAt(selIndex, 2);
-            price =  model.getValueAt(selIndex, 3);
+            number = model.getValueAt(selIndex, 2);
+            price = model.getValueAt(selIndex, 3);
 
         }
-        String deleteTableSQL = "DELETE FROM storage WHERE `Name` = '" + name + "' AND `Provider` = '" + provider + "' AND `Number` = " 
-                 + number + " AND `Price` = " + price + ";";
+        String deleteTableSQL = "DELETE FROM storage WHERE `Name` = '" + name + "' AND `Provider` = '" + provider + "' AND `Number` = "
+                + number + " AND `Price` = " + price + ";";
         try {
             statement = dbConnection.createStatement();
             // выполняем запрос delete SQL
@@ -341,7 +344,7 @@ public class Main extends javax.swing.JFrame {
                 ResultSetMetaData rsmd = rs.getMetaData();
 
                 for (int col = 1; col <= rsmd.getColumnCount(); col++) {
-                    dtm.addColumn(rsmd.getColumnLabel(col));   
+                    dtm.addColumn(rsmd.getColumnLabel(col));
                 }
                 // <--
 
@@ -385,7 +388,7 @@ public class Main extends javax.swing.JFrame {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
         jTable1.setModel(dtm);
         jTable1.getColumnModel().getColumn(0).setHeaderValue("Имя");
     }
@@ -405,35 +408,23 @@ public class Main extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
 
-                
-
-}
+                }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Main.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (InstantiationException ex) {
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Main.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Main.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        
-
-} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class
-
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
