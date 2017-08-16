@@ -246,7 +246,7 @@ public class Main extends javax.swing.JFrame {
                 dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", "root", "08071994");
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных!", "Ошибка!",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!",JOptionPane.INFORMATION_MESSAGE);
                 System.exit(1);
             }
             return dbConnection;
