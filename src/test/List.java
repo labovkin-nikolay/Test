@@ -194,7 +194,7 @@ public class List extends javax.swing.JFrame {
 }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:ff
-        dbConnection = getConnection();
+        //dbConnection = getConnection();
         Statement statement = null;
         String name = jTextField1.getText();
         String provider = jTextField2.getText();
@@ -213,7 +213,7 @@ public class List extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        dbConnection = getConnection();
+        //dbConnection = getConnection();
         Statement statement = null;
         int[] selectedRows = jTable1.getSelectedRows();
         Object name = null;
@@ -248,7 +248,7 @@ public class List extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
     private void tableShow() {
-        dbConnection = getConnection();
+        //dbConnection = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 

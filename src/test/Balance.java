@@ -96,7 +96,7 @@ public class Balance extends javax.swing.JFrame {
     }
 
     private void tableShow() {
-        dbConnection = getConnection();
+        //dbConnection = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         String balance = "SELECT p.name Имя,p.provider Поставщик,(IF(t2.number IS NOT NULL,t2.number,0) - IF(t1.number IS NOT NULL,t1.number,0)) Количество, p.price Цена\n"
