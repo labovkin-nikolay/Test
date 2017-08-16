@@ -60,6 +60,7 @@ public class Main extends javax.swing.JFrame {
         setTitle("Список закупок");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(100, 100));
+        setPreferredSize(new java.awt.Dimension(900, 800));
         setResizable(false);
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
         layout.columnWidths = new int[] {0, 8, 0, 8, 0};

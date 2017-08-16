@@ -55,6 +55,7 @@ public class List extends javax.swing.JFrame {
         setTitle("Список товаров");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(100, 100));
+        setPreferredSize(new java.awt.Dimension(900, 800));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
