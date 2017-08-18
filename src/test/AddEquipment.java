@@ -113,6 +113,7 @@ public class AddEquipment extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setLocation(new java.awt.Point(200, 100));
 
         jLabel1.setText("Номер");
 

@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Vector;
 import javax.swing.*;
@@ -44,7 +44,7 @@ public class Accounting extends javax.swing.JFrame {
                 dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", "root", "08071994");
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(1);
             }
             return dbConnection;
@@ -54,6 +54,7 @@ public class Accounting extends javax.swing.JFrame {
     public void comboFilling(String sql, MyComboBox box) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        box.removeAllItems();
         try {
             pstmt = dbConnection.prepareStatement(sql);
             if (pstmt.execute()) {
@@ -91,17 +92,28 @@ public class Accounting extends javax.swing.JFrame {
                 rs1 = pstmt1.getResultSet();
                 ResultSetMetaData rsmd = rs.getMetaData();
                 ResultSetMetaData rsmd1 = rs1.getMetaData();
-                for (int col = 1; col <= rsmd1.getColumnCount(); col++) {
-                    dtm.addColumn(rsmd1.getColumnLabel(col));
+                for (int col = 1; col <= rsmd.getColumnCount(); col++) {
+                    if (col == 5) {
+                        dtm.addColumn(rsmd.getColumnLabel(col));
+                        dtm.addColumn("Общая стоимость");
+                    } else {
+                        dtm.addColumn(rsmd.getColumnLabel(col));
+                    }
                 }
-
+                Vector<String> title1 = new Vector(Arrays.asList("Акты закупки"));
+                dtm.addRow(title1);
                 while (rs.next()) {
 
                     Vector<String> row = new Vector<String>();
 
                     for (int col = 1; col <= rsmd.getColumnCount(); col++) {
-                        if("number".equals(rsmd.getColumnName(col)))
+                        if ("number".equals(rsmd.getColumnName(col))) {
                             balance += rs.getInt(col);
+                        }
+                        if (col == 6) {
+                            double cost = rs.getDouble(4) * rs.getInt(5);
+                            row.add(Double.toString(cost));
+                        }
                         int type = rsmd.getColumnType(col);
                         switch (type) {
                             case Types.INTEGER:
@@ -111,7 +123,7 @@ public class Accounting extends javax.swing.JFrame {
                                 row.add(rs.getString(col));
                                 break;
                             case Types.DECIMAL:
-                                row.add(Double.toString(rs.getDouble(col))); 
+                                row.add(Double.toString(rs.getDouble(col)));
                                 break;
                             case Types.TIMESTAMP:
                                 row.add(rs.getDate(col).toString());
@@ -120,26 +132,32 @@ public class Accounting extends javax.swing.JFrame {
                                 throw new Exception("Неподдерживаемый тип");
                         }
                     }
-
                     dtm.addRow(row);
                 }
-                 while (rs1.next()) {
+
+                Vector<String> title2 = new Vector(Arrays.asList("Акты затрат"));
+                dtm.addRow(title2);
+                while (rs1.next()) {
 
                     Vector<String> row = new Vector<String>();
 
                     for (int col = 1; col <= rsmd1.getColumnCount(); col++) {
-                        if("number".equals(rsmd1.getColumnName(col)))
+                        if ("number".equals(rsmd1.getColumnName(col))) {
                             balance -= rs1.getInt(col);
+                        }
+                        if (col == 6) {
+                            row.add("-");
+                        }
                         int type = rsmd1.getColumnType(col);
                         switch (type) {
                             case Types.INTEGER:
-                                row.add(new Integer(rs1.getInt(col)).toString()); 
+                                row.add(new Integer(rs1.getInt(col)).toString());
                                 break;
                             case Types.VARCHAR:
                                 row.add(rs1.getString(col));
                                 break;
                             case Types.DECIMAL:
-                                row.add(Double.toString(rs1.getDouble(col)));        
+                                row.add(Double.toString(rs1.getDouble(col)));
                                 break;
                             case Types.TIMESTAMP:
                                 row.add(rs1.getDate(col).toString());
@@ -151,6 +169,9 @@ public class Accounting extends javax.swing.JFrame {
 
                     dtm.addRow(row);
                 }
+                Vector<String> r = new Vector(Arrays.asList("", "", "", "Остаток", balance));
+                dtm.addRow(r);
+
             }
         } catch (SQLException ex) {
             System.out.println(ex.toString());
@@ -158,7 +179,6 @@ public class Accounting extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(balance);
         jTable1.setModel(dtm);
         jTable1.getColumnModel();
     }
@@ -185,10 +205,18 @@ public class Accounting extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        dateChooserCombo2 = new datechooser.beans.DateChooserCombo();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Учет материалов");
+        setLocation(new java.awt.Point(200, 100));
+        setResizable(false);
 
         ((JLabel) myComboBox1.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
         JTextField editor1 = (JTextField) myComboBox1.getEditor().getEditorComponent();
@@ -200,9 +228,14 @@ public class Accounting extends javax.swing.JFrame {
             }
         });
 
+        try {
+            dateChooserCombo1.setDefaultPeriods(new datechooser.model.multiple.PeriodSet());
+        } catch (datechooser.model.exeptions.IncompatibleDataExeption e1) {
+            e1.printStackTrace();
+        }
         dateChooserCombo1.setCalendarPreferredSize(new java.awt.Dimension(400, 300));
 
-        jButton1.setText("Добавить");
+        jButton1.setText("Добавить / Удалить");
         jButton1.setToolTipText("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,8 +243,6 @@ public class Accounting extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane1.setAutoscrolls(true);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 5));
 
@@ -221,62 +252,102 @@ public class Accounting extends javax.swing.JFrame {
         jTable1.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jButton2.setText("Просмотр");
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Акт на расход материала", "Акт на поступление материала", "Наименование материала", "Оборудование" }));
+        jComboBox1.setSelectedItem(null);
+
+        try {
+            dateChooserCombo2.setDefaultPeriods(new datechooser.model.multiple.PeriodSet());
+        } catch (datechooser.model.exeptions.IncompatibleDataExeption e1) {
+            e1.printStackTrace();
+        }
+        dateChooserCombo2.setCalendarPreferredSize(new java.awt.Dimension(400, 300));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setText("Наименование материала");
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel2.setText("С");
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel3.setText("По");
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setText("Выборка по дате");
+
+        jButton2.setText("Обновить список");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Акт на расход материала", "Акт на поступление материала", "Наименование материала", "Оборудование" }));
-        jComboBox1.setSelectedItem(null);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(41, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel2)
+                        .addGap(8, 8, 8)
+                        .addComponent(dateChooserCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateChooserCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(myComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(dateChooserCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(331, 331, 331))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(20, 20, 20)))))
-                .addGap(21, 21, 21))
+                        .addGap(150, 150, 150)
+                        .addComponent(jLabel4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(myComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(dateChooserCombo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(45, 45, 45))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(myComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addComponent(jLabel4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(dateChooserCombo1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(dateChooserCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel3)))
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel2)
+                        .addGap(41, 41, 41)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -285,39 +356,49 @@ public class Accounting extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String checkStr = jComboBox1.getSelectedItem().toString();
-                        switch (checkStr) {
-                            case "Наименование материала":
-                                new AddMaterial().setVisible(true);
-                                break;
-                            case "Оборудование":
-                                new AddEquipment().setVisible(true);
-                        }
-        Calendar date = dateChooserCombo1.getSelectedDate();
-        long i = date.getTimeInMillis();
-        java.sql.Date date1 = new java.sql.Date(i);
-        Statement statement = null;
-        String s = date1.toString().replace("-", "");
-        //String insertTableSQL = "INSERT INTO purchase_list (id, product, provider, price, number, date) VALUES ( '50', 'Винт М5', 'test', '3', '100', '" + s + "')";
-        //try {
-        //    statement = dbConnection.createStatement();
-        //   statement.executeUpdate(insertTableSQL);
-        //} catch (SQLException e) {
-        //    System.out.println(e.getMessage());
-        //}
+        switch (checkStr) {
+            case "Наименование материала":
+                new AddMaterial().setVisible(true);
+                break;
+            case "Оборудование":
+                new AddEquipment().setVisible(true);
+        }
+        //Calendar date = dateChooserCombo1.getSelectedDate();
+        //long i = date.getTimeInMillis();
+        //java.sql.Date date1 = new java.sql.Date(i);
+        //String s = date1.toString().replace("-", "");
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        String name = myComboBox1.getSelectedItem().toString();
-        String sql_select = "select id Номер, product Товар, provider Поставщик, price 'Цена/шт', number Количество, equipment Оборудование, employee Рабочий, date Дата from purchase_list where product = '" + name + "';";
-        String sql_select1 = "select id Номер, product Товар, provider Поставщик, price 'Цена/шт', number Количество, equipment Оборудование, employee Рабочий, date Дата from spending_list where product = '" + name + "';";
-        tableShow(sql_select, sql_select1);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void myComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myComboBox1ActionPerformed
         // TODO add your handling code here:
+        if (dateChooserCombo1.getSelectedDate() == null || dateChooserCombo2.getSelectedDate() == null) {
+            String name = myComboBox1.getSelectedItem().toString();
+            String sql_select = "select id Номер, product 'Товар', provider 'Поставщик', price 'Цена/шт', number 'Количество', equipment 'Оборудование', employee Рабочий, date Дата from purchase_list where product = '" + name + "' order by date desc;";
+            String sql_select1 = "select id Номер, product Товар, provider Поставщик, price 'Цена/шт', number Количество, equipment Оборудование, employee Рабочий, date Дата from spending_list where product = '" + name + "'  order by date desc;";
+            tableShow(sql_select, sql_select1);
+        } else {
+            Calendar d1 = dateChooserCombo1.getSelectedDate();
+            long i1 = d1.getTimeInMillis();
+            java.sql.Date date1 = new java.sql.Date(i1);
+            Calendar d2 = dateChooserCombo2.getSelectedDate();
+            long i2 = d2.getTimeInMillis();
+            java.sql.Date date2 = new java.sql.Date(i2);
+            String name = myComboBox1.getSelectedItem().toString();
+            String sql_select = "select id Номер, product Товар, provider Поставщик, price 'Цена/шт', number Количество, equipment Оборудование, employee Рабочий, date Дата from purchase_list where product = '" + name + "' and date between '" + date1 + "' AND '" + date2 + "' order by date desc;";
+            String sql_select1 = "select id Номер, product Товар, provider Поставщик, price 'Цена/шт', number Количество, equipment Оборудование, employee Рабочий, date Дата from spending_list where product = '" + name + "' and date between '" + date1 + "' AND '" + date2 + "'  order by date desc;";
+            tableShow(sql_select, sql_select1);
+        }
     }//GEN-LAST:event_myComboBox1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String sql_command1 = "SELECT id, name from products_list";
+        comboFilling(sql_command1, myComboBox1);
+        this.dispose();
+        new Accounting().setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -356,11 +437,16 @@ public class Accounting extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private datechooser.beans.DateChooserCombo dateChooserCombo1;
+    private datechooser.beans.DateChooserCombo dateChooserCombo2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private test.myComboBox.MyComboBox myComboBox1;
+    public test.myComboBox.MyComboBox myComboBox1;
     // End of variables declaration//GEN-END:variables
 }

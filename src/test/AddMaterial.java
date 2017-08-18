@@ -14,9 +14,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.Vector;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import test.myComboBox.MyComboBox;
 
 /**
  *
@@ -115,6 +117,7 @@ public class AddMaterial extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setLocation(new java.awt.Point(200, 100));
 
         jLabel1.setText("Номер");
 
@@ -208,13 +211,13 @@ public class AddMaterial extends javax.swing.JFrame {
         int id = Integer.parseInt(jTextField1.getText());
         String name = jTextField2.getText();
         String provider = jTextField3.getText();
-        String insertTableSQL = "INSERT INTO products_list (id, name, provider) VALUES" + "( '" +id +"', '" + name + "', '" + provider + "' )";
+        String insertTableSQL = "INSERT INTO products_list (id, name, provider) VALUES" + "( '" + id + "', '" + name + "', '" + provider + "' )";
         try {
             statement = dbConnection.createStatement();
             statement.executeUpdate(insertTableSQL);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!", JOptionPane.INFORMATION_MESSAGE);
         }
         tableShow();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -286,4 +289,5 @@ public class AddMaterial extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
 }
