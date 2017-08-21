@@ -5,6 +5,7 @@
  */
 package test;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -30,6 +31,16 @@ public class Accounting extends javax.swing.JFrame {
      * Creates new form Accounting
      */
     private Connection dbConnection;
+    private static String name = "root";
+    private static String pass = "08071994";
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPass() {
+        return pass;
+    }
 
     public Connection getConnection() {
         try {
@@ -41,7 +52,7 @@ public class Accounting extends javax.swing.JFrame {
             return dbConnection;
         } else {
             try {
-                dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", "root", "08071994");
+                dbConnection = DriverManager.getConnection("jdbc:mysql://192.168.1.14/test", name, pass);
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка!", JOptionPane.INFORMATION_MESSAGE);
@@ -166,8 +177,9 @@ public class Accounting extends javax.swing.JFrame {
                                 throw new Exception("Неподдерживаемый тип");
                         }
                     }
-
+                    setBackground(Color.RED);
                     dtm.addRow(row);
+
                 }
                 Vector<String> r = new Vector(Arrays.asList("", "", "", "Остаток", balance));
                 dtm.addRow(r);
@@ -251,7 +263,7 @@ public class Accounting extends javax.swing.JFrame {
         jTable1.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Акт на расход материала", "Акт на поступление материала", "Наименование материала", "Оборудование" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Акт на поступление материала", "Акт на расход материала", "Наименование материала", "Оборудование" }));
         jComboBox1.setSelectedItem(null);
 
         try {
@@ -293,7 +305,7 @@ public class Accounting extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(myComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 878, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
@@ -305,12 +317,12 @@ public class Accounting extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addGap(31, 31, 31)
                                 .addComponent(dateChooserCombo2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(122, 122, 122)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(87, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
