@@ -40,7 +40,7 @@ public class AddEquipment extends javax.swing.JFrame {
         ResultSet rs = null;
         DefaultTableModel dtm = null;
         try {
-            pstmt = dbConnection.prepareStatement("select id 'Номер', name 'Имя' from equipments_list");
+            pstmt = dbConnection.prepareStatement("select id 'Номер', inventory_number 'Инвентарный номер', name 'Имя' from equipments_list");
             dtm = new DefaultTableModel();
             if (pstmt.execute()) {
                 rs = pstmt.getResultSet();

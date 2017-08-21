@@ -113,7 +113,7 @@ public class AddConsumption extends javax.swing.JFrame {
         tableShow();
         String sql_command1 = "SELECT id, name from products_list";
         comboFilling(sql_command1, myComboBox1);
-        String sql_command2 = "SELECT id, name from equipments_list";
+        String sql_command2 = "SELECT id, inventory_number, name from equipments_list";
         comboFilling(sql_command2, myComboBox2);
     }
 
