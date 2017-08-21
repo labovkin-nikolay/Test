@@ -60,13 +60,13 @@ public class MyComboBox extends JComboBox {
                     caretPos = inputField.getCaretPosition();
                     String text = "";
                     try {
-                        text = inputField.getText(0, caretPos);
+                        text = inputField.getText(0, caretPos).toLowerCase();
                     } catch (javax.swing.text.BadLocationException e) {
                         e.printStackTrace();
                     }
 
                     for (int i = 0; i < getItemCount(); i++) {
-                        String element = (String) getItemAt(i);
+                        String element = getItemAt(i).toString().toLowerCase();
                         if (element.startsWith(text)) {
                             setSelectedIndex(i);
                             return;
