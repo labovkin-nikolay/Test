@@ -67,7 +67,7 @@ public class AddConsumption extends javax.swing.JFrame {
         ResultSet rs = null;
         DefaultTableModel dtm = null;
         try {
-            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Товар', provider 'Поставщик', price 'Цена/шт', number 'Количество', equipment 'Оборудование', employee 'Рабочий', date Дата from spending_list");
+            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Товар', price 'Цена/шт', number 'Количество', equipment 'Оборудование', date Дата from spending_list");
             dtm = new DefaultTableModel();
             if (pstmt.execute()) {
                 rs = pstmt.getResultSet();
@@ -113,8 +113,9 @@ public class AddConsumption extends javax.swing.JFrame {
         tableShow();
         String sql_command1 = "SELECT id, name from products_list";
         comboFilling(sql_command1, myComboBox1);
-        String sql_command2 = "SELECT id, inventory_number, name from equipments_list";
+        String sql_command2 = "SELECT id, name from equipments_list";
         comboFilling(sql_command2, myComboBox2);
+        jTable1. setAutoCreateRowSorter(true);
     }
 
     /**
@@ -275,14 +276,12 @@ public class AddConsumption extends javax.swing.JFrame {
         Statement statement = null;
         int id = Integer.parseInt(jTextField1.getText());
         String product = myComboBox1.getSelectedItem().toString();
-        String provider = jTextField2.getText();
         int number = Integer.parseInt(jTextField4.getText());
         String equipment = myComboBox2.getSelectedItem().toString();
-        String employee = jTextField6.getText();
         Calendar d = dateChooserCombo1.getSelectedDate();
         long i = d.getTimeInMillis();
         java.sql.Date date = new java.sql.Date(i);
-        String insertTableSQL = "INSERT INTO spending_list (id, product, provider, number, equipment, employee, date) VALUES" + "( '" + id + "', '" + product + "', '" + provider + "', '" + number + "', '" + equipment + "', '" + employee + "', '" + date + "')";
+        String insertTableSQL = "INSERT INTO spending_list (id, product, number, equipment, date) VALUES" + "( '" + id + "', '" + product + "', '" + number + "', '" + equipment + "', '" + date + "')";
         try {
             statement = dbConnection.createStatement();
             statement.executeUpdate(insertTableSQL);

@@ -80,6 +80,7 @@ public class AddMaterial extends javax.swing.JFrame {
         dbConnection = getConnection();
         initComponents();
         tableShow();
+        jTable1. setAutoCreateRowSorter(true);
     }
 
     /**
