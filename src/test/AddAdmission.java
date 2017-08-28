@@ -96,7 +96,7 @@ public class AddAdmission extends javax.swing.JFrame {
         ResultSet rs = null;
         DefaultTableModel dtm = null;
         try {
-            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Товар', price 'Цена/шт', number 'Количество', equipment 'Оборудование', date Дата from purchase_list");
+            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Товар', unit 'Единица измерения', price 'Цена/шт', number 'Количество', equipment 'Оборудование', date Дата from purchase_list");
             dtm = new DefaultTableModel();
             if (pstmt.execute()) {
                 rs = pstmt.getResultSet();

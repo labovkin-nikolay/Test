@@ -90,7 +90,7 @@ public class AddConsumption extends javax.swing.JFrame {
         ResultSet rs = null;
         DefaultTableModel dtm = null;
         try {
-            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Наименование материала', number 'Количество', price 'Цена/шт', equipment 'Наименование оборудования или видов работ', date Дата from spending_list");
+            pstmt = dbConnection.prepareStatement("select id 'Номер', product 'Наименование материала', unit 'Единица измерения', number 'Количество', price 'Цена/шт', equipment 'Наименование оборудования или видов работ', date Дата from spending_list");
             dtm = new DefaultTableModel();
             if (pstmt.execute()) {
                 rs = pstmt.getResultSet();

@@ -49,11 +49,9 @@
                           <Component id="myComboBox1" pref="493" max="32767" attributes="0"/>
                           <Component id="jComboBox1" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="myComboBox2" alignment="0" max="32767" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jTextField1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="dateChooserCombo1" alignment="0" pref="140" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jTextField1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="dateChooserCombo1" alignment="0" pref="140" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>

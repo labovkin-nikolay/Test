@@ -323,7 +323,6 @@ public class Accounting extends javax.swing.JFrame {
                                 balance -= rs1.getDouble(col);
                             }
                         }
-                        System.out.println(rs1.getString(2));
                         if (col == 5) {
                             double cost = rs1.getDouble(3) * rs1.getDouble(4);
                             cost_balance -= cost;
@@ -333,7 +332,7 @@ public class Accounting extends javax.swing.JFrame {
                         }
                         int type = rsmd1.getColumnType(col);
                         switch (type) {
-                            case Types.INTEGER:
+                            case Types.INTEGER: 
                                 row.add(new Integer(rs1.getInt(col)).toString());
                                 rows[i][k - 1] = rs1.getInt(col);
                                 break;
