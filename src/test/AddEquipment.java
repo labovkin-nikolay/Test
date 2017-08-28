@@ -40,7 +40,7 @@ public class AddEquipment extends javax.swing.JFrame {
         ResultSet rs = null;
         DefaultTableModel dtm = null;
         try {
-            pstmt = dbConnection.prepareStatement("select id 'Номер', name 'Имя' from equipments_list");
+            pstmt = dbConnection.prepareStatement("select id 'Номер', name 'Имя' from equipments_list order by name asc");
             dtm = new DefaultTableModel();
             if (pstmt.execute()) {
                 rs = pstmt.getResultSet();
@@ -78,6 +78,7 @@ public class AddEquipment extends javax.swing.JFrame {
         dbConnection = getConnection();
         initComponents();
         tableShow();
+        jTable1.setAutoCreateRowSorter(true);
     }
 
     /**
@@ -141,10 +142,10 @@ public class AddEquipment extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(57, 57, 57)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
-                            .addComponent(jTextField1))
-                        .addGap(0, 313, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
